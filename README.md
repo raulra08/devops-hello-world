@@ -20,7 +20,7 @@ The code can run locally as well as in the CI/CD server, and it must be able to 
 # Build the app within a Container
 
 ```
-./build/docker-build-container.sh
+./build/docker-build-container.sh <CONTAINER_TAG>
 ```
 
 # Run the Code Locally
@@ -32,10 +32,10 @@ The code can run locally as well as in the CI/CD server, and it must be able to 
 # Run the app container
 
 ```
-./build/docker-run-container.sh
+./build/docker-run-container.sh <CONTAINER_TAG>
 ```
 
-# Clean Up
+# Clean Up Locally
 
 ```
 ./build/cleanup.sh
