@@ -1,0 +1,6 @@
+# Git Ignore
+out/
+
+# VS Code files for those working on multiple tools
+.vscode/*
+*.code-workspace

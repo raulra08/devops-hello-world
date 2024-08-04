@@ -1,0 +1,49 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+env:
+  DEFAULT_APP_TAG: hellow-world-app
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the Source Code
+        uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.9' 
+
+      - name: Build w/Dependencies
+        run: ./build/app-build.sh
+
+      - name: Run (see pipeline logs)
+        run: ./build/app-run.sh
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build App Container
+        run: ./build/docker-build-container.sh ${{ env.DEFAULT_APP_TAG }}
+
+      - name: Docker Image Scan with Trivy
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${{ env.DEFAULT_APP_TAG }}
+
+      - name: Run App Container (see pipeline logs)
+        run: ./build/docker-run-container.sh ${{ env.DEFAULT_APP_TAG }}
+
+      # Publish Artifacts
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          overwrite: true
+          retention-days: 1
+          name: HelloWorldApp
+          path: 'out/src'
