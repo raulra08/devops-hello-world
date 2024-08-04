@@ -6,6 +6,12 @@ Good DevOps principles first.
 
 The code can run locally as well as in the CI/CD server, and it must be able to run in the same way both, locally, and the remote.
 
+# Requirements
+ ```
+ python 3.9+
+ Docker
+ ```
+
 # Build the Code & Dependencies
 
 ```
