@@ -1,8 +1,8 @@
 #!/bin/bash
 
 if [ $# -lt 1 ]; then
-  echo "Usage: $0 CONTAINER_TAG"
-  echo "Example: docker-build-container.sh hello-world-app"
+  echo "Usage: $0 CONTAINER_TAG[:<VERSION>]"
+  echo "Example: docker-build-container.sh app:v1.0"
   exit 1
 fi
 

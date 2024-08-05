@@ -5,7 +5,8 @@ on:
     branches:
       - main
 env:
-  DEFAULT_APP_TAG: hellow-world-app
+  DEFAULT_APP_TAG: hello-world-app
+  IMAGE_VERSION: v1.0.0
 
 jobs:
   build:
@@ -19,25 +20,34 @@ jobs:
         with:
           python-version: '3.9' 
 
-      - name: Build w/Dependencies
+      - name: Install Development Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements_dev.txt
+      
+      - name: Run Linter
+        run: ./build/app-lint.sh
+      
+      - name: Run Tests
+        run: ./build/app-tests.sh
+      
+      - name: Build Python App w/Dependencies
         run: ./build/app-build.sh
 
-      - name: Run (see pipeline logs)
+      - name: Run App (see pipeline logs)
         run: ./build/app-run.sh
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build App Container
-        run: ./build/docker-build-container.sh ${{ env.DEFAULT_APP_TAG }}
+      
+      - uses: docker/setup-buildx-action@v3
+      - name: Build App Container w/Docker
+        run: ./build/docker-build-container.sh ${{ env.DEFAULT_APP_TAG }}:${{ env.IMAGE_VERSION }}
 
       - name: Docker Image Scan with Trivy
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: ${{ env.DEFAULT_APP_TAG }}
+          image-ref: '${{ env.DEFAULT_APP_TAG }}:${{ env.IMAGE_VERSION }}'
 
       - name: Run App Container (see pipeline logs)
-        run: ./build/docker-run-container.sh ${{ env.DEFAULT_APP_TAG }}
+        run: ./build/docker-run-container.sh ${{ env.DEFAULT_APP_TAG }}:${{ env.IMAGE_VERSION }}
 
       # Publish Artifacts
       - name: Publish Artifacts
@@ -46,4 +56,6 @@ jobs:
           overwrite: true
           retention-days: 1
           name: HelloWorldApp
-          path: 'out/src'
+          path: |
+            'out/requirements.txt'
+            'out/src'

@@ -1,5 +1,8 @@
 # Git Ignore
 out/
+.pytest_cache/
+__pycache__/
+.coverage
 
 # VS Code files for those working on multiple tools
 .vscode/*

@@ -1,7 +1,9 @@
-# define main function
-def main():
-    print("Hello World!")
+from src.modules.messenger import greet_the_world
 
-# call main function
+
+def main():
+    print(greet_the_world())
+
+
 if __name__ == "__main__":
     main()
